@@ -1,0 +1,8 @@
+controller:
+  kind: DaemonSet
+  service:
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+      service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags: "environment=dev,owner=Amos"
+    loadBalancerSourceRanges:
+    - 84.111.153.19/24

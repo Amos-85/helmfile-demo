@@ -1,0 +1,7 @@
+.idea
+.terraform
+terraform.tfstate*
+kops
+kube_config_cluster.yml
+rke.tf
+specs

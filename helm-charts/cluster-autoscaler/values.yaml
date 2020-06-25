@@ -1,0 +1,19 @@
+awsRegion: us-east-2
+cloudProvider: aws
+autoDiscovery:
+  clusterName: c-sc9cx
+#  tags:
+#  - kubernetes.io/cluster/c-sc9cx
+#  - k8s.io/cluster-autoscaler/enabled
+
+
+rbac:
+  create: true
+
+resources:
+  requests:
+    cpu: 300m
+    memory: 300Mi
+  limits:
+    cpu: 300m
+    memory: 300Mi

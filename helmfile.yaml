@@ -1,0 +1,79 @@
+repositories:
+- name: stable
+  url: https://kubernetes-charts.storage.googleapis.com
+- name: incubator
+  url: https://kubernetes-charts-incubator.storage.googleapis.com
+- name: rancher-stable
+  url: https://releases.rancher.com/server-charts/stable
+- name: jetstack
+  url: https://charts.jetstack.io
+- name: ingress-nginx
+  url: https://kubernetes.github.io/ingress-nginx
+- name: bitnami
+  url: https://charts.bitnami.com/bitnami
+- name: hashicorp
+  url: https://helm.releases.hashicorp.com
+
+helmDefaults:
+  verify: false
+  wait: true
+  historyMax: 10
+  createNamespace: true
+  atomic: true
+
+
+releases:
+- name: cert-manager
+  namespace: cert-manager
+  labels:
+    app: cert-manager
+  chart: jetstack/cert-manager
+#  version: v0.15.0
+  values:
+  - "helm-charts/cert-manager/values.yaml"
+  hooks:
+  - events: ["prepare"]
+    command: "kubectl"
+    args: ["apply", "--validate=false", "--filename=https://github.com/jetstack/cert-manager/releases/download/v0.15.0/cert-manager.crds.yaml"]
+
+- name: ingress-nginx
+  namespace: ingress-nginx
+  labels:
+    app: ingress-nginx
+  chart: ingress-nginx/ingress-nginx
+#  version: 2.1.0
+  values:
+  - "helm-charts/ingress-nginx/values.yaml"
+
+- name: rancher
+  namespace: cattle-system
+  labels:
+    app: rancher
+  chart: rancher-stable/rancher
+  values:
+  - "helm-charts/rancher-chart/values.yaml"
+  needs:
+  - cert-manager/cert-manager
+  - ingress-nginx/ingress-nginx
+
+- name: aws-ebs-csi
+  namespace: aws-ebs-csi
+  labels:
+    isDriver: true
+    app: aws-ebs-csi
+  chart: "/home/amos/IdeaProjects/aws-ebs-csi-driver/aws-ebs-csi-driver"
+#  chart: https://github.com/kubernetes-sigs/aws-ebs-csi-driver/releases/download/v0.5.0/helm-chart.tgz
+#  version: v0.5.0
+  values:
+  - "helm-charts/aws-ebs-csi/values.yaml"
+
+- name: vault
+  namespace: vault
+  labels:
+    app: vault
+  chart: hashicorp/vault
+  version: 0.5.0
+  values:
+  - "helm-charts/vault/values.yaml"
+  needs:
+  - aws-ebs-csi/aws-ebs-csi

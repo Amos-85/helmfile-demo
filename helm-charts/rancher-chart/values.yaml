@@ -1,0 +1,13 @@
+hostname: rancher-k8s.ddns.net
+tls: ingress
+privateCA: false
+ingress.tls.source: rancher
+debug: false
+resources:
+ requests:
+   cpu: 300m
+   memory: 2Gi
+ limits:
+   cpu: 400m
+   memory: 2Gi
+

@@ -1,0 +1,8 @@
+enableVolumeScheduling: true
+enableVolumeResizing: true
+enableVolumeSnapshot: true
+extraVolumeTags:
+- k=t
+
+node:
+  kubeletPath: /opt/rke/var/lib/kubelet
